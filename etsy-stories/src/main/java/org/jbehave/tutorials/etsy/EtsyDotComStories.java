@@ -52,7 +52,7 @@ import static org.jbehave.web.selenium.WebDriverHtmlOutput.WEB_DRIVER_HTML;
 
 public class EtsyDotComStories extends JUnitStories {
 
-    private WebDriverProvider driverProvider = new TypeWebDriverProvider();
+    private WebDriverProvider driverProvider = new SauceWebDriverProvider();
     private Configuration configuration;
     private ContextView contextView = new LocalFrameContextView().sized(640, 120);
     private SeleniumContext seleniumContext = new SeleniumContext();
