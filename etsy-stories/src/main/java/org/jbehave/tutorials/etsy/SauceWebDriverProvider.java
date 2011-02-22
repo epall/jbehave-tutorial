@@ -32,7 +32,7 @@ public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
         try {
             delegate = new RemoteWebDriver(new URL("http://" + username + ":" + access_key
                     + "@ondemand.saucelabs.com/wd/hub"), desiredCapabilities);
-            openBrowserToJobPage(((RemoteWebDriver) delegate).getSessionId());
+            //openBrowserToJobPage(((RemoteWebDriver) delegate).getSessionId());
         } catch(MalformedURLException e) {
             throw new UnsupportedOperationException(e);
         } catch(Exception e) {
