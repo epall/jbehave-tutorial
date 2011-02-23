@@ -9,22 +9,16 @@ import org.jbehave.web.selenium.DelegatingWebDriverProvider;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.SessionId;
 
 public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
 
     public void initialize() {
         try {
-            String username = System.getProperty("SAUCE_USERNAME");
-            if(username == null) {
-                // Other Sauce clients use environment variables for credentials
-                username = System.getenv("SAUCE_USERNAME");
-            }
-            String access_key = System.getProperty("SAUCE_ACCESS_KEY");
-            if(access_key == null) {
-                // Other Sauce clients use environment variables for credentials
-                access_key = System.getenv("SAUCE_ACCESS_KEY");
-            }
+            final String username = getProperty("SAUCE_USERNAME");
+            final String access_key = getProperty("SAUCE_ACCESS_KEY");
+
             if(username == null) {
                 throw new UnsupportedOperationException(
                         "SAUCE_USERNAME environment variable not specified");
@@ -34,21 +28,41 @@ public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
                         "SAUCE_ACCESS_KEY environment variable not specified");
             }
     
-            DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+            final DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
             desiredCapabilities.setVersion("3.6.");
             desiredCapabilities.setPlatform(Platform.WINDOWS);
             desiredCapabilities.setCapability("name", "JBehave");
-            delegate = new RemoteWebDriver(new URL("http://" + username + ":" + access_key
-                    + "@ondemand.saucelabs.com/wd/hub"), desiredCapabilities);
+            delegate = new ThreadLocal<WebDriver>() {
+              @Override protected RemoteWebDriver initialValue() {
+                try {
+                  return new RemoteWebDriver(new URL("http://" + username + ":" + access_key
+                        + "@ondemand.saucelabs.com/wd/hub"), desiredCapabilities);
+                } catch(MalformedURLException e) {
+                  throw new UnsupportedOperationException(e);
+                } catch(UnsupportedOperationException e) {
+                  throw e;
+                } catch(Exception e) {
+                  e.printStackTrace();
+                  throw new UnsupportedOperationException(e);
+                }
+              }
+            };
             //openBrowserToJobPage(((RemoteWebDriver) delegate).getSessionId());
-        } catch(MalformedURLException e) {
-            throw new UnsupportedOperationException(e);
         } catch(UnsupportedOperationException e) {
             throw e;
         } catch(Exception e) {
             e.printStackTrace();
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    private String getProperty(String key){
+      String value = System.getProperty(key);
+      if(value == null) {
+        // Other Sauce clients use environment variables for credentials
+        value = System.getenv(key);
+      }
+      return value;
     }
 
     private void openBrowserToJobPage(SessionId sessionId) {
