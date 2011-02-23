@@ -14,27 +14,29 @@ import org.openqa.selenium.remote.SessionId;
 public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
 
     public void initialize() {
-        String username = System.getProperty("SAUCE_USERNAME");
-        String access_key = System.getProperty("SAUCE_ACCESS_KEY");
-        if(username == null) {
-            throw new UnsupportedOperationException(
-                    "SAUCE_USERNAME environment variable not specified");
-        }
-        if(access_key == null) {
-            throw new UnsupportedOperationException(
-                    "SAUCE_ACCESS_KEY environment variable not specified");
-        }
-
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-        desiredCapabilities.setVersion("3.6.");
-        desiredCapabilities.setPlatform(Platform.WINDOWS);
-        desiredCapabilities.setCapability("name", "JBehave");
         try {
+            String username = System.getProperty("SAUCE_USERNAME");
+            String access_key = System.getProperty("SAUCE_ACCESS_KEY");
+            if(username == null) {
+                throw new UnsupportedOperationException(
+                        "SAUCE_USERNAME environment variable not specified");
+            }
+            if(access_key == null) {
+                throw new UnsupportedOperationException(
+                        "SAUCE_ACCESS_KEY environment variable not specified");
+            }
+    
+            DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+            desiredCapabilities.setVersion("3.6.");
+            desiredCapabilities.setPlatform(Platform.WINDOWS);
+            desiredCapabilities.setCapability("name", "JBehave");
             delegate = new RemoteWebDriver(new URL("http://" + username + ":" + access_key
                     + "@ondemand.saucelabs.com/wd/hub"), desiredCapabilities);
             //openBrowserToJobPage(((RemoteWebDriver) delegate).getSessionId());
         } catch(MalformedURLException e) {
             throw new UnsupportedOperationException(e);
+        } catch(UnsupportedOperationException e) {
+            throw e;
         } catch(Exception e) {
             e.printStackTrace();
             throw new UnsupportedOperationException(e);
