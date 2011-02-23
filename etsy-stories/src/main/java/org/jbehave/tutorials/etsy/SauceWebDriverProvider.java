@@ -16,8 +16,8 @@ public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
 
     public void initialize() {
         try {
-            final String username = getProperty("SAUCE_USERNAME");
-            final String access_key = getProperty("SAUCE_ACCESS_KEY");
+            final String username = System.getProperty("SAUCE_USERNAME");
+            final String access_key = System.getProperty("SAUCE_ACCESS_KEY");
 
             if(username == null) {
                 throw new UnsupportedOperationException(
@@ -54,15 +54,6 @@ public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
             e.printStackTrace();
             throw new UnsupportedOperationException(e);
         }
-    }
-
-    private String getProperty(String key){
-      String value = System.getProperty(key);
-      if(value == null) {
-        // Other Sauce clients use environment variables for credentials
-        value = System.getenv(key);
-      }
-      return value;
     }
 
     private void openBrowserToJobPage(SessionId sessionId) {
