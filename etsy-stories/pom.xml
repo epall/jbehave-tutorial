@@ -38,29 +38,21 @@
       <groupId>org.jbehave.web</groupId>
       <artifactId>jbehave-web-selenium</artifactId>
       <version>${jbehave.web.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.jbehave</groupId>
-                <artifactId>jbehave-core</artifactId>
-            </exclusion>
-        </exclusions>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jbehave</groupId>
+          <artifactId>jbehave-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jbehave</groupId>
       <artifactId>jbehave-pico</artifactId>
       <version>${jbehave.core.version}</version>
     </dependency>
-    <!--dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-remote-control</artifactId>
-      <version>${selenium.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.james</groupId>
-          <artifactId>apache-mime4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency-->
+    <!--dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-remote-control</artifactId> 
+      <version>${selenium.version}</version> <exclusions> <exclusion> <groupId>org.apache.james</groupId> 
+      <artifactId>apache-mime4j</artifactId> </exclusion> </exclusions> </dependency -->
   </dependencies>
 
   <build>
@@ -84,15 +76,15 @@
         <filtering>false</filtering>
       </resource>
       <resource>
-        <directory>${basedir}/src/main/stories</directory>
+        <directory>${basedir}/src/main/resources/stories</directory>
         <filtering>false</filtering>
       </resource>
       <resource>
         <directory>${basedir}/src/main/java</directory>
         <filtering>false</filtering>
-        <!--<excludes>-->
-          <!--<exclude>**/*.java</exclude>-->
-        <!--</excludes>-->
+        <!--<excludes> -->
+        <!--<exclude>**/*.java</exclude> -->
+        <!--</excludes> -->
       </resource>
       <resource>
         <directory>${basedir}/src/main/resources</directory>
@@ -180,6 +172,7 @@
               <generateViewAfterStories>true</generateViewAfterStories>
               <ignoreFailureInStories>true</ignoreFailureInStories>
               <ignoreFailureInView>false</ignoreFailureInView>
+              <skip>false</skip>
               <metaFilters>
                 <metaFilter>${meta.filter}</metaFilter>
               </metaFilters>
@@ -188,38 +181,34 @@
               <goal>run-stories-as-embeddables</goal>
             </goals>
           </execution>
-
-            <!-- I WANT TO GET THIS WORKING - PAUL -->
-
-            <!--<execution>-->
-                <!--<id>map-stories</id>-->
-                <!--<phase>integration-test</phase>-->
-                <!--<configuration>-->
-                    <!--<includes>-->
-                        <!--<include>**/*StoryMaps.java</include>-->
-                    <!--</includes>-->
-                    <!--<metaFilters>-->
-                        <!--<metaFilter>+category *</metaFilter>-->
-                    <!--</metaFilters>-->
-                <!--</configuration>-->
-                <!--<goals>-->
-                    <!--<goal>map-stories-as-paths</goal>-->
-                <!--</goals>-->
-            <!--</execution>-->
-
-            <!-- I WANT TO GET THIS WORKING - PAUL -->
-
-            <!--<execution>-->
-                <!--<id>report-stepdocs</id>-->
-                <!--<phase>integration-test</phase>-->
-                <!--<configuration>-->
-                    <!--<embedderClass>org.jbehave.tutorials.etsy.EtsyDotComStories</embedderClass>-->
-                <!--</configuration>-->
-                <!--<goals>-->
-                    <!--<goal>report-stepdocs</goal>-->
-                <!--</goals>-->
-            <!--</execution>-->
-
+          <execution>
+            <id>map-stories</id>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*StoryMaps.java</include>
+              </includes>
+              <metaFilters>
+                <metaFilter>+category *</metaFilter>
+                <metaFilter>+color *</metaFilter>
+              </metaFilters>
+            </configuration>
+            <goals>
+              <goal>map-stories-as-embeddables</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report-stepdocs</id>
+            <phase>integration-test</phase>
+            <configuration>
+              <includes>
+                <include>**/*Stories.java</include>
+              </includes>
+            </configuration>
+            <goals>
+              <goal>report-stepdocs-as-embeddables</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
       <plugin>
