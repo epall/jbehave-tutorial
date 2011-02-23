@@ -16,7 +16,15 @@ public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
     public void initialize() {
         try {
             String username = System.getProperty("SAUCE_USERNAME");
+            if(username == null) {
+                // Other Sauce clients use environment variables for credentials
+                username = System.getenv("SAUCE_USERNAME");
+            }
             String access_key = System.getProperty("SAUCE_ACCESS_KEY");
+            if(access_key == null) {
+                // Other Sauce clients use environment variables for credentials
+                access_key = System.getenv("SAUCE_ACCESS_KEY");
+            }
             if(username == null) {
                 throw new UnsupportedOperationException(
                         "SAUCE_USERNAME environment variable not specified");
