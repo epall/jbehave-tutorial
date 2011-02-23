@@ -14,8 +14,8 @@ import org.openqa.selenium.remote.SessionId;
 public class SauceWebDriverProvider extends DelegatingWebDriverProvider {
 
     public void initialize() {
-        String username = System.getenv("SAUCE_USERNAME");
-        String access_key = System.getenv("SAUCE_ACCESS_KEY");
+        String username = System.getProperty("SAUCE_USERNAME");
+        String access_key = System.getProperty("SAUCE_ACCESS_KEY");
         if(username == null) {
             throw new UnsupportedOperationException(
                     "SAUCE_USERNAME environment variable not specified");
